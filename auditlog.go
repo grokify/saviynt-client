@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/grokify/mogo/fmt/fmtutil"
 	"github.com/grokify/mogo/net/http/httpsimple"
 	"github.com/grokify/mogo/net/urlutil"
 )
@@ -105,7 +104,6 @@ func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offs
 			Offset: strconv.Itoa(int(offset)),
 		},
 	}
-	fmtutil.PrintJSON(sreq)
 	sclient := httpsimple.SimpleClient{
 		BaseURL:    c.BaseURL,
 		HTTPClient: c.HTTPClient}
