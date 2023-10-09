@@ -2,6 +2,7 @@ package saviynt
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -60,6 +61,9 @@ func GetToken(baseURL, username, password string) (*oauth2.Token, error) {
 	resp, err := httpsimple.Do(sreq)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode >= 300 {
+		return nil, fmt.Errorf("login api status code is (%d)", resp.StatusCode)
 	}
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
