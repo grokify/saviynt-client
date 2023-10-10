@@ -7,7 +7,7 @@
 
 This is a Go helper for the Saviynt API.
 
- [build-status-svg]: https://github.com/grokify/go-saviynt/workflows/test/badge.svg?branch=main
+ [build-status-svg]: https://github.com/grokify/go-saviynt/workflows/test/badge.svg
  [build-status-url]: https://github.com/grokify/go-saviynt/actions
  [goreport-svg]: https://goreportcard.com/badge/github.com/grokify/go-saviynt
  [goreport-url]: https://goreportcard.com/report/github.com/grokify/go-saviynt
