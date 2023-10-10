@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 
 	"github.com/grokify/go-saviynt"
@@ -22,7 +23,17 @@ func main() {
 		os.Getenv("SAVIYNT_PASSWORD"))
 	logutil.FatalErr(err)
 
-	resp, err := clt.GetAuditLogRuntimeControlsData(os.Getenv("SAVIYNT_QUERY_NAME"), 100000, 50, 0)
+	attrs := map[string]any{}
+	if attrsStr := os.Getenv("SAVIYNT_QUERY_ATTR"); len(attrsStr) > 0 {
+		attrsVals, err := url.ParseQuery(attrsStr)
+		logutil.FatalErr(err)
+		attrs = MS3ToMSA(attrsVals)
+	}
+
+	resp, err := clt.FetchRuntimeControlsDataV2(
+		os.Getenv("SAVIYNT_QUERY_NAME"),
+		attrs,
+		50, 0)
 	logutil.FatalErr(err)
 
 	b, err := io.ReadAll(resp.Body)
@@ -35,4 +46,24 @@ func main() {
 	fmt.Println(string(b))
 
 	fmt.Println("DONE")
+}
+
+func MS3ToMSS(m map[string][]string) map[string]string {
+	mss := map[string]string{}
+	for k, vs := range m {
+		for _, v := range vs {
+			mss[k] = v
+		}
+	}
+	return mss
+}
+
+func MS3ToMSA(m map[string][]string) map[string]any {
+	mss := map[string]any{}
+	for k, vs := range m {
+		for _, v := range vs {
+			mss[k] = v
+		}
+	}
+	return mss
 }
