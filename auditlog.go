@@ -9,6 +9,8 @@ import (
 	"github.com/grokify/mogo/net/urlutil"
 )
 
+const AttrTimeFrame = "timeFrame" // from docs
+
 // ExportColumns provides the column names in a standard audit log CSV or Excel export.
 func AuditLogUIExportColumns() []string {
 	return []string{
@@ -87,7 +89,8 @@ func AnalyticsSQLAuditLogJob() string {
 	// SELECT ua.LOGINKEY, l.LOGINTIME, l.LOGOUTDATE, l.COMMENTS AS LOGIN_COMMENTS, ua.TYPEOFACCESS AS OBJECTTYPE, ua.OBJECTKEY AS OBJECTNAME, ua.ActionType AS ACTION, u.username AS ACCESSBY, ua.IPADDRESS, ua.OBJECT_ATTRIBUTE_NAME AS ATTRIBUTE, ua.OLD_VALUE AS OLDVALUE, ua.NEW_VALUE AS NEWVALUE, ua.EVENT_ID AS EVENTID, ua.DETAIL, ua.ACCESS_URL, ua.ACCESSTIME AS EVENT_TIME, ua.QUERY_PARAM FROM users u, userlogin_access ua, userlogins l WHERE l.loginkey = ua.LOGINKEY AND l.USERKEY = u.userkey AND ua.AccessTime >= (NOW() - INTERVAL ${timeFrame} Minute) AND ua.Detail is not NULL
 }
 
-func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offset uint) (*http.Response, error) {
+func (c Client) FetchRuntimeControlsDataV2(name string, attrs map[string]any, limit, offset uint) (*http.Response, error) {
+	// func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offset uint) (*http.Response, error) {
 	if limit == 0 {
 		limit = 50
 	}
@@ -97,11 +100,9 @@ func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offs
 		BodyType: httpsimple.BodyTypeJSON,
 		Body: AnalyticsRequest{
 			AnalyticsName: name,
-			Attributes: AnalyticsRequestAttributes{
-				TimeFrame: strconv.Itoa(int(minutes)),
-			},
-			Max:    strconv.Itoa(int(limit)),
-			Offset: strconv.Itoa(int(offset)),
+			Attributes:    attrs,
+			Max:           strconv.Itoa(int(limit)),
+			Offset:        strconv.Itoa(int(offset)),
 		},
 	}
 	sclient := httpsimple.SimpleClient{
@@ -111,10 +112,10 @@ func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offs
 }
 
 type AnalyticsRequest struct {
-	AnalyticsName string                     `json:"analyticsname"`
-	Attributes    AnalyticsRequestAttributes `json:"attributes"`
-	Max           string                     `json:"max"`
-	Offset        string                     `json:"offset"`
+	AnalyticsName string `json:"analyticsname"`
+	Attributes    any    `json:"attributes,omitempty"`
+	Max           string `json:"max,omitempty"`
+	Offset        string `json:"offset,omitempty"`
 }
 
 type AnalyticsRequestAttributes struct {
