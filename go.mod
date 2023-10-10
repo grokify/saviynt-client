@@ -1,6 +1,6 @@
 module github.com/grokify/go-saviynt
 
-go 1.21.1
+go 1.21
 
 require (
 	github.com/grokify/goauth v0.20.2
