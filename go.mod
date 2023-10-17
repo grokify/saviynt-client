@@ -3,8 +3,8 @@ module github.com/grokify/go-saviynt
 go 1.21
 
 require (
-	github.com/grokify/goauth v0.20.2
-	github.com/grokify/mogo v0.56.0
+	github.com/grokify/goauth v0.20.4
+	github.com/grokify/mogo v0.57.0
 	golang.org/x/oauth2 v0.13.0
 )
 
@@ -20,12 +20,11 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/stretchr/testify v1.7.2 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/valyala/fastjson v1.6.4 // indirect
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/text v0.13.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/oleiade/reflections.v1 v1.0.0 // indirect
 )
