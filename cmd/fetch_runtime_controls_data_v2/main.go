@@ -10,6 +10,7 @@ import (
 	"github.com/grokify/mogo/config"
 	"github.com/grokify/mogo/encoding/jsonutil"
 	"github.com/grokify/mogo/log/logutil"
+	"github.com/grokify/mogo/type/maputil"
 )
 
 func main() {
@@ -27,7 +28,9 @@ func main() {
 	if attrsStr := os.Getenv("SAVIYNT_QUERY_ATTR"); len(attrsStr) > 0 {
 		attrsVals, err := url.ParseQuery(attrsStr)
 		logutil.FatalErr(err)
-		attrs = MS3ToMSA(attrsVals)
+		attrsValsMap := maputil.MapStringSlice(attrsVals)
+		attrs = attrsValsMap.FlattenAny(false, false)
+		// attrs = MS3ToMSA(attrsVals)
 	}
 
 	resp, err := clt.FetchRuntimeControlsDataV2(
@@ -48,6 +51,8 @@ func main() {
 	fmt.Println("DONE")
 }
 
+/*
+
 func MS3ToMSS(m map[string][]string) map[string]string {
 	mss := map[string]string{}
 	for k, vs := range m {
@@ -67,3 +72,5 @@ func MS3ToMSA(m map[string][]string) map[string]any {
 	}
 	return mss
 }
+
+*/
