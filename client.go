@@ -49,7 +49,7 @@ func (c Client) GetToken(username, password string) (*oauth2.Token, error) {
 }
 
 func GetToken(baseURL, username, password string) (*oauth2.Token, error) {
-	sreq := httpsimple.SimpleRequest{
+	sreq := httpsimple.Request{
 		URL:      urlutil.JoinAbsolute(baseURL, RelURLLogin),
 		Method:   http.MethodPost,
 		BodyType: httpsimple.BodyTypeJSON,

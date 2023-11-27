@@ -94,7 +94,7 @@ func (c Client) FetchRuntimeControlsDataV2(name string, attrs map[string]any, li
 	if limit == 0 {
 		limit = 50
 	}
-	sreq := httpsimple.SimpleRequest{
+	sreq := httpsimple.Request{
 		Method:   http.MethodPost,
 		URL:      urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, RelURLLoginRuntimeControlsData),
 		BodyType: httpsimple.BodyTypeJSON,
@@ -105,7 +105,7 @@ func (c Client) FetchRuntimeControlsDataV2(name string, attrs map[string]any, li
 			Offset:        strconv.Itoa(int(offset)),
 		},
 	}
-	sclient := httpsimple.SimpleClient{
+	sclient := httpsimple.Client{
 		BaseURL:    c.BaseURL,
 		HTTPClient: c.HTTPClient}
 	return sclient.Do(sreq)
