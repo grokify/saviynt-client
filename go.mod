@@ -3,8 +3,8 @@ module github.com/grokify/go-saviynt
 go 1.21
 
 require (
-	github.com/grokify/goauth v0.20.6
-	github.com/grokify/mogo v0.62.2
+	github.com/grokify/goauth v0.20.7
+	github.com/grokify/mogo v0.62.3
 	golang.org/x/oauth2 v0.15.0
 )
 
