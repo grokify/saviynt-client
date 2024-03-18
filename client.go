@@ -2,6 +2,7 @@ package saviynt
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -20,9 +21,10 @@ const (
 )
 
 type Client struct {
-	BaseURL    string
-	Path       string
-	HTTPClient *http.Client
+	BaseURL      string
+	Path         string
+	HTTPClient   *http.Client
+	SimpleClient *httpsimple.Client
 }
 
 func NewClient(baseURL, path, username, password string) (Client, error) {
@@ -36,6 +38,8 @@ func NewClient(baseURL, path, username, password string) (Client, error) {
 	}
 	httpClient := authutil.NewClientTokenOAuth2(tok)
 	c.HTTPClient = httpClient
+	simClient := httpsimple.NewClient(httpClient, baseURL)
+	c.SimpleClient = &simClient
 	return c, nil
 }
 
@@ -58,17 +62,37 @@ func GetToken(baseURL, username, password string) (*oauth2.Token, error) {
 			Password: password,
 		},
 	}
-	resp, err := httpsimple.Do(sreq)
-	if err != nil {
+	if resp, err := httpsimple.Do(sreq); err != nil {
 		return nil, err
-	}
-	if resp.StatusCode >= 300 {
+	} else if resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("login api status code is (%d)", resp.StatusCode)
-	}
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
+	} else if b, err := io.ReadAll(resp.Body); err != nil {
 		return nil, err
+	} else {
+		tok := &oauth2.Token{}
+		return tok, json.Unmarshal(b, tok)
 	}
-	tok := &oauth2.Token{}
-	return tok, json.Unmarshal(b, tok)
+}
+
+func (c Client) GetUserByUsername(username string) (*GetUserResponse, []byte, *http.Response, error) {
+	if c.SimpleClient == nil {
+		return nil, []byte{}, nil, errors.New("simple client cannot be nil")
+	}
+	sreq := httpsimple.Request{
+		URL:      urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, "getUser"),
+		Method:   http.MethodPost,
+		BodyType: httpsimple.BodyTypeJSON,
+		Body: map[string]string{
+			"username": username,
+		},
+	}
+	if resp, err := c.SimpleClient.Do(sreq); err != nil {
+		return nil, []byte{}, resp, err
+	} else if body, err := io.ReadAll(resp.Body); err != nil {
+		return nil, body, resp, err
+	} else {
+		apiResp := &GetUserResponse{}
+		err := json.Unmarshal(body, apiResp)
+		return apiResp, body, resp, err
+	}
 }
