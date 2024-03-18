@@ -88,10 +88,10 @@ func (c Client) GetUserByUsername(username string) (*GetUserResponse, []byte, *h
 	}
 	if resp, err := c.SimpleClient.Do(sreq); err != nil {
 		return nil, []byte{}, resp, err
-	} else if body, err := io.ReadAll(resp.Body); err != nil {
-		return nil, body, resp, err
+	} else if b, err := io.ReadAll(resp.Body); err != nil {
+		return nil, b, resp, err
 	} else {
 		apiResp := &GetUserResponse{}
-		return apiResp, body, resp, json.Unmarshal(body, apiResp)
+		return apiResp, b, resp, json.Unmarshal(b, apiResp)
 	}
 }
