@@ -17,3 +17,7 @@ This is a Go helper for the Saviynt API.
  [docs-godoc-url]: https://pkg.go.dev/github.com/grokify/go-saviynt
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
  [license-url]: https://github.com/grokify/go-saviynt/blob/master/LICENSE
+
+## Creating a SIEM integration
+
+https://docs.saviyntcloud.com/bundle/EIC-Admin-v24x/page/Content/Chapter20-EIC-Integrations/Saviynt-SIEM-Integration.htm
