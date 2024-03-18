@@ -92,7 +92,6 @@ func (c Client) GetUserByUsername(username string) (*GetUserResponse, []byte, *h
 		return nil, body, resp, err
 	} else {
 		apiResp := &GetUserResponse{}
-		err := json.Unmarshal(body, apiResp)
-		return apiResp, body, resp, err
+		return apiResp, body, resp, json.Unmarshal(body, apiResp)
 	}
 }
