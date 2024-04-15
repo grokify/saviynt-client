@@ -5,8 +5,8 @@ go 1.22
 toolchain go1.22.1
 
 require (
-	github.com/grokify/goauth v0.20.12
-	github.com/grokify/mogo v0.63.5
+	github.com/grokify/goauth v0.20.13
+	github.com/grokify/mogo v0.63.7
 	golang.org/x/oauth2 v0.19.0
 )
 
@@ -20,8 +20,8 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
-	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
+	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )
