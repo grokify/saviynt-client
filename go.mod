@@ -7,7 +7,7 @@ toolchain go1.22.1
 require (
 	github.com/grokify/goauth v0.20.15
 	github.com/grokify/mogo v0.63.10
-	golang.org/x/oauth2 v0.19.0
+	golang.org/x/oauth2 v0.20.0
 )
 
 require (
