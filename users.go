@@ -47,7 +47,6 @@ func (ud *UserDetails) SCIMUser() (scim.User, error) {
 		if err := usr.AddEmail(em, true); err != nil {
 			return usr, err
 		}
-
 	}
 	return usr, nil
 }
