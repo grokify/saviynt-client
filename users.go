@@ -25,7 +25,7 @@ type UserDetails struct {
 	Username  string `json:"username"`
 }
 
-func (ud *UserDetails) SCIMUser() scim.User {
+func (ud *UserDetails) SCIMUser() (scim.User, error) {
 	usr := scim.User{
 		Active: strconvutil.MustParseBool(ud.Enabled),
 		Name: scim.Name{
@@ -44,7 +44,10 @@ func (ud *UserDetails) SCIMUser() scim.User {
 		}
 	}
 	if em := strings.TrimSpace(ud.Email); em != "" {
-		usr.AddEmail(em, true)
+		if err := usr.AddEmail(em, true); err != nil {
+			return usr, err
+		}
+
 	}
-	return usr
+	return usr, nil
 }
