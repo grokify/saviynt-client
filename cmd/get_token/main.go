@@ -19,7 +19,8 @@ func main() {
 		context.Background(),
 		os.Getenv("SAVIYNT_BASE_URL"),
 		os.Getenv("SAVIYNT_USERNAME"),
-		os.Getenv("SAVIYNT_PASSWORD"))
+		os.Getenv("SAVIYNT_PASSWORD"),
+		true)
 	logutil.FatalErr(err)
 
 	fmtutil.MustPrintJSON(tok)

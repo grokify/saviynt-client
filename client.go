@@ -10,6 +10,7 @@ import (
 
 	"github.com/grokify/goauth/authutil"
 	"github.com/grokify/mogo/net/http/httpsimple"
+	"github.com/grokify/mogo/net/http/httputilmore"
 	"github.com/grokify/mogo/net/urlutil"
 	"golang.org/x/oauth2"
 )
@@ -33,7 +34,7 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (C
 		BaseURL: baseURL,
 		Path:    path,
 	}
-	tok, err := GetToken(ctx, baseURL, username, password)
+	tok, err := GetToken(ctx, baseURL, username, password, true)
 	if err != nil {
 		return c, err
 	}
@@ -50,18 +51,33 @@ type LoginRequest struct {
 }
 
 func (c Client) GetToken(ctx context.Context, username, password string) (*oauth2.Token, error) {
-	return GetToken(ctx, c.BaseURL, username, password)
+	return GetToken(ctx, c.BaseURL, username, password, true)
 }
 
-func GetToken(ctx context.Context, baseURL, username, password string) (*oauth2.Token, error) {
-	sreq := httpsimple.Request{
-		URL:      urlutil.JoinAbsolute(baseURL, RelURLLogin),
-		Method:   http.MethodPost,
-		BodyType: httpsimple.BodyTypeJSON,
-		Body: LoginRequest{
-			Username: username,
-			Password: password,
-		},
+func GetToken(ctx context.Context, baseURL, username, password string, useBasicAuth bool) (*oauth2.Token, error) {
+	var sreq httpsimple.Request
+	if useBasicAuth {
+		hval, err := authutil.BasicAuthHeader(username, password)
+		if err != nil {
+			return nil, err
+		}
+		sreq = httpsimple.Request{
+			URL:    urlutil.JoinAbsolute(baseURL, RelURLLogin),
+			Method: http.MethodPost,
+			Headers: http.Header{
+				httputilmore.HeaderAuthorization: []string{hval},
+			},
+		}
+	} else {
+		sreq = httpsimple.Request{
+			URL:      urlutil.JoinAbsolute(baseURL, RelURLLogin),
+			Method:   http.MethodPost,
+			BodyType: httpsimple.BodyTypeJSON,
+			Body: LoginRequest{
+				Username: username,
+				Password: password,
+			},
+		}
 	}
 	if resp, err := httpsimple.Do(ctx, sreq); err != nil {
 		return nil, err
