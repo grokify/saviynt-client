@@ -7,13 +7,12 @@ toolchain go1.22.3
 require (
 	github.com/grokify/goauth v0.21.1
 	github.com/grokify/mogo v0.64.0
-	golang.org/x/oauth2 v0.20.0
+	golang.org/x/oauth2 v0.21.0
 )
 
 require (
 	github.com/caarlos0/env/v6 v6.10.1 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/jessevdk/go-flags v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
