@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -15,6 +16,7 @@ func main() {
 	logutil.FatalErr(err)
 
 	tok, err := saviynt.GetToken(
+		context.Background(),
 		os.Getenv("SAVIYNT_BASE_URL"),
 		os.Getenv("SAVIYNT_USERNAME"),
 		os.Getenv("SAVIYNT_PASSWORD"))

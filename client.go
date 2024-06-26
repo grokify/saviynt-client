@@ -1,6 +1,7 @@
 package saviynt
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -27,12 +28,12 @@ type Client struct {
 	SimpleClient *httpsimple.Client
 }
 
-func NewClient(baseURL, path, username, password string) (Client, error) {
+func NewClient(ctx context.Context, baseURL, path, username, password string) (Client, error) {
 	c := Client{
 		BaseURL: baseURL,
 		Path:    path,
 	}
-	tok, err := GetToken(baseURL, username, password)
+	tok, err := GetToken(ctx, baseURL, username, password)
 	if err != nil {
 		return c, err
 	}
@@ -48,11 +49,11 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (c Client) GetToken(username, password string) (*oauth2.Token, error) {
-	return GetToken(c.BaseURL, username, password)
+func (c Client) GetToken(ctx context.Context, username, password string) (*oauth2.Token, error) {
+	return GetToken(ctx, c.BaseURL, username, password)
 }
 
-func GetToken(baseURL, username, password string) (*oauth2.Token, error) {
+func GetToken(ctx context.Context, baseURL, username, password string) (*oauth2.Token, error) {
 	sreq := httpsimple.Request{
 		URL:      urlutil.JoinAbsolute(baseURL, RelURLLogin),
 		Method:   http.MethodPost,
@@ -62,7 +63,7 @@ func GetToken(baseURL, username, password string) (*oauth2.Token, error) {
 			Password: password,
 		},
 	}
-	if resp, err := httpsimple.Do(sreq); err != nil {
+	if resp, err := httpsimple.Do(ctx, sreq); err != nil {
 		return nil, err
 	} else if resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("login api status code is (%d)", resp.StatusCode)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/url"
@@ -18,6 +19,7 @@ func main() {
 	logutil.FatalErr(err)
 
 	clt, err := saviynt.NewClient(
+		context.Background(),
 		os.Getenv("SAVIYNT_BASE_URL"),
 		saviynt.RelURLAPI,
 		os.Getenv("SAVIYNT_USERNAME"),
