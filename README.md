@@ -21,3 +21,7 @@ This is a Go helper for the Saviynt API.
 ## Creating a SIEM integration
 
 https://docs.saviyntcloud.com/bundle/EIC-Admin-v24x/page/Content/Chapter20-EIC-Integrations/Saviynt-SIEM-Integration.htm
+
+## OCSF
+
+https://www.query.ai/resources/blogs/need-to-model-cybersecurity-data-lets-walk-through-ocsf/
