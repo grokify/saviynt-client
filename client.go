@@ -38,7 +38,7 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (C
 		BaseURL: baseURL,
 		Path:    path,
 	}
-	tok, err := getToken(ctx, baseURL, username, password, false)
+	tok, err := GetTokenPassword(ctx, baseURL, username, password, false)
 	if err != nil {
 		return c, err
 	}
@@ -55,11 +55,11 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (c Client) GetToken(ctx context.Context, username, password string) (*oauth2.Token, error) {
-	return getToken(ctx, c.BaseURL, username, password, true)
+func (c Client) GetTokenPassword(ctx context.Context, username, password string) (*oauth2.Token, error) {
+	return GetTokenPassword(ctx, c.BaseURL, username, password, true)
 }
 
-func getToken(ctx context.Context, baseURL, username, password string, useBasicAuth bool) (*oauth2.Token, error) {
+func GetTokenPassword(ctx context.Context, baseURL, username, password string, useBasicAuth bool) (*oauth2.Token, error) {
 	var sreq httpsimple.Request
 	if useBasicAuth {
 		hval, err := authutil.BasicAuthHeader(username, password)
@@ -102,10 +102,10 @@ func (c Client) GetTokenRefresh(ctx context.Context) (*oauth2.Token, error) {
 	} else if strings.TrimSpace(c.Token.AccessToken) == "" {
 		return nil, errors.New("oauth2.Token.AccessToken cannot be empty")
 	}
-	return getTokenRefresh(ctx, c.BaseURL, c.Token.AccessToken)
+	return GetTokenRefresh(ctx, c.BaseURL, c.Token.AccessToken)
 }
 
-func getTokenRefresh(ctx context.Context, baseURL, refreshToken string) (*oauth2.Token, error) {
+func GetTokenRefresh(ctx context.Context, baseURL, refreshToken string) (*oauth2.Token, error) {
 	sreq := httpsimple.Request{
 		URL:      urlutil.JoinAbsolute(baseURL, RelOAuthAccessToken),
 		Method:   http.MethodPost,
