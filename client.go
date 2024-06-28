@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/grokify/goauth/authutil"
 	"github.com/grokify/mogo/net/http/httpsimple"
@@ -17,6 +19,7 @@ import (
 
 const (
 	RelURLLogin                    = "/ECM/api/login"
+	RelOAuthAccessToken            = "/ECM/oauth/access_token"
 	RelURLECM                      = "/ECM"
 	RelURLAPI                      = "/api/v5"
 	RelURLLoginRuntimeControlsData = "/fetchRuntimeControlsDataV2" // API at https://documenter.getpostman.com/view/23973797/2s9XxwutWR#b821cc21-ee7c-49e3-9433-989ed87b2b03
@@ -27,6 +30,7 @@ type Client struct {
 	Path         string
 	HTTPClient   *http.Client
 	SimpleClient *httpsimple.Client
+	Token        *oauth2.Token
 }
 
 func NewClient(ctx context.Context, baseURL, path, username, password string) (Client, error) {
@@ -34,10 +38,11 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (C
 		BaseURL: baseURL,
 		Path:    path,
 	}
-	tok, err := GetToken(ctx, baseURL, username, password, true)
+	tok, err := getToken(ctx, baseURL, username, password, false)
 	if err != nil {
 		return c, err
 	}
+	c.Token = tok
 	httpClient := authutil.NewClientTokenOAuth2(tok)
 	c.HTTPClient = httpClient
 	simClient := httpsimple.NewClient(httpClient, baseURL)
@@ -51,10 +56,10 @@ type LoginRequest struct {
 }
 
 func (c Client) GetToken(ctx context.Context, username, password string) (*oauth2.Token, error) {
-	return GetToken(ctx, c.BaseURL, username, password, true)
+	return getToken(ctx, c.BaseURL, username, password, true)
 }
 
-func GetToken(ctx context.Context, baseURL, username, password string, useBasicAuth bool) (*oauth2.Token, error) {
+func getToken(ctx context.Context, baseURL, username, password string, useBasicAuth bool) (*oauth2.Token, error) {
 	var sreq httpsimple.Request
 	if useBasicAuth {
 		hval, err := authutil.BasicAuthHeader(username, password)
@@ -91,24 +96,33 @@ func GetToken(ctx context.Context, baseURL, username, password string, useBasicA
 	}
 }
 
-func (c Client) GetUserByUsername(username string) (*GetUserResponse, []byte, *http.Response, error) {
-	if c.SimpleClient == nil {
-		return nil, []byte{}, nil, errors.New("simple client cannot be nil")
+func (c Client) GetTokenRefresh(ctx context.Context) (*oauth2.Token, error) {
+	if c.Token == nil {
+		return nil, errors.New("oauth2.Token cannot be nil")
+	} else if strings.TrimSpace(c.Token.AccessToken) == "" {
+		return nil, errors.New("oauth2.Token.AccessToken cannot be empty")
 	}
+	return getTokenRefresh(ctx, c.BaseURL, c.Token.AccessToken)
+}
+
+func getTokenRefresh(ctx context.Context, baseURL, refreshToken string) (*oauth2.Token, error) {
 	sreq := httpsimple.Request{
-		URL:      urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, "getUser"),
+		URL:      urlutil.JoinAbsolute(baseURL, RelOAuthAccessToken),
 		Method:   http.MethodPost,
-		BodyType: httpsimple.BodyTypeJSON,
-		Body: map[string]string{
-			"username": username,
-		},
+		BodyType: httpsimple.BodyTypeForm,
+		Body: url.Values{
+			"grant_type":    []string{"refresh_token"},
+			"refresh_token": []string{refreshToken}},
 	}
-	if resp, err := c.SimpleClient.Do(sreq); err != nil {
-		return nil, []byte{}, resp, err
+
+	if resp, err := httpsimple.Do(ctx, sreq); err != nil {
+		return nil, err
+	} else if resp.StatusCode >= 300 {
+		return nil, fmt.Errorf("login api status code is (%d)", resp.StatusCode)
 	} else if b, err := io.ReadAll(resp.Body); err != nil {
-		return nil, b, resp, err
+		return nil, err
 	} else {
-		apiResp := &GetUserResponse{}
-		return apiResp, b, resp, json.Unmarshal(b, apiResp)
+		tok := &oauth2.Token{}
+		return tok, json.Unmarshal(b, tok)
 	}
 }

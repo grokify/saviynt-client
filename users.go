@@ -1,9 +1,15 @@
 package saviynt
 
 import (
+	"encoding/json"
+	"errors"
+	"io"
+	"net/http"
 	"strings"
 
 	"github.com/grokify/goauth/scim"
+	"github.com/grokify/mogo/net/http/httpsimple"
+	"github.com/grokify/mogo/net/urlutil"
 	"github.com/grokify/mogo/strconv/strconvutil"
 )
 
@@ -49,4 +55,26 @@ func (ud *UserDetails) SCIMUser() (scim.User, error) {
 		}
 	}
 	return usr, nil
+}
+
+func (c Client) GetUserByUsername(username string) (*GetUserResponse, []byte, *http.Response, error) {
+	if c.SimpleClient == nil {
+		return nil, []byte{}, nil, errors.New("simple client cannot be nil")
+	}
+	sreq := httpsimple.Request{
+		URL:      urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, "getUser"),
+		Method:   http.MethodPost,
+		BodyType: httpsimple.BodyTypeJSON,
+		Body: map[string]string{
+			"username": username,
+		},
+	}
+	if resp, err := c.SimpleClient.Do(sreq); err != nil {
+		return nil, []byte{}, resp, err
+	} else if b, err := io.ReadAll(resp.Body); err != nil {
+		return nil, b, resp, err
+	} else {
+		apiResp := &GetUserResponse{}
+		return apiResp, b, resp, json.Unmarshal(b, apiResp)
+	}
 }
