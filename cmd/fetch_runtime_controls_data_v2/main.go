@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -8,71 +9,97 @@ import (
 	"os"
 
 	"github.com/grokify/go-saviynt"
+	"github.com/grokify/go-saviynt/auditlog"
+	"github.com/grokify/go-saviynt/auditlog/siem"
 	"github.com/grokify/mogo/config"
 	"github.com/grokify/mogo/encoding/jsonutil"
+	"github.com/grokify/mogo/fmt/fmtutil"
 	"github.com/grokify/mogo/log/logutil"
 	"github.com/grokify/mogo/type/maputil"
 )
 
 func main() {
 	_, err := config.LoadDotEnv([]string{".env"}, 1)
-	logutil.FatalErr(err)
+	logutil.FatalErr(err, "load_dot_env")
 
 	clt, err := saviynt.NewClient(
 		context.Background(),
-		os.Getenv("SAVIYNT_BASE_URL"),
+		os.Getenv(saviynt.EnvSaviyntServerURL),
 		saviynt.RelURLAPI,
-		os.Getenv("SAVIYNT_USERNAME"),
-		os.Getenv("SAVIYNT_PASSWORD"))
-	logutil.FatalErr(err)
+		os.Getenv(saviynt.EnvSaviyntUsername),
+		os.Getenv(saviynt.EnvSaviyntPassword))
+	logutil.FatalErr(err, "new_client")
+
+	if 1 == 1 {
+		usr, _, resp, err := clt.GetUserByUsername(os.Getenv(saviynt.EnvSaviyntUsername))
+		logutil.FatalErr(err, "GetUserByUsername")
+
+		b, err := io.ReadAll(resp.Body)
+		logutil.FatalErr(err, "ReadAll")
+		fmt.Println(string(b))
+		fmtutil.PrintJSON(usr)
+		scimUser, err := usr.UserDetails.SCIMUser()
+		logutil.FatalErr(err)
+		fmtutil.PrintJSON(scimUser)
+		//panic("Z")
+	}
 
 	attrs := map[string]any{}
 	if attrsStr := os.Getenv("SAVIYNT_QUERY_ATTR"); len(attrsStr) > 0 {
 		attrsVals, err := url.ParseQuery(attrsStr)
-		logutil.FatalErr(err)
+		logutil.FatalErr(err, "parse_query")
 		attrsValsMap := maputil.MapStringSlice(attrsVals)
 		attrs = attrsValsMap.FlattenAny(false, false)
 		// attrs = MS3ToMSA(attrsVals)
 	}
 
-	resp, err := clt.FetchRuntimeControlsDataV2(
+	// DATE_FORMAT(ua.ACCESSTIME,  '%Y-%m-%dT%TZ')
+	req, resp, err := clt.FetchRuntimeControlsDataV2(
 		os.Getenv("SAVIYNT_QUERY_NAME"),
+		"", "",
 		attrs,
-		50, 0)
-	logutil.FatalErr(err)
-
-	b, err := io.ReadAll(resp.Body)
-	logutil.FatalErr(err)
-
-	if resp.StatusCode < 300 {
-		b, err = jsonutil.IndentBytes(b, "", "  ")
-		logutil.FatalErr(err)
+		9999, 0)
+	fmtutil.PrintJSON(req)
+	logutil.FatalErr(err, "fetchruntimecontrolsdatav2")
+	fmt.Printf("status code (%d)\n", resp.StatusCode)
+	if resp.StatusCode > 299 {
+		fmt.Printf("status code error (%d)\n", resp.StatusCode)
 	}
-	fmt.Println(string(b))
+
+	if 1 == 0 {
+		r, err := siem.ParseSIEMAuditResponse(resp.Body)
+		logutil.FatalErr(err, "ParseSIEMAuditResponse")
+		fmtutil.PrintJSON(r)
+		fmt.Printf("REC_COUNT (%d)\n", len(r.Results))
+	} else {
+		b, err := io.ReadAll(resp.Body)
+		logutil.FatalErr(err, "ioreadall")
+
+		if resp.StatusCode < 300 {
+			b, err = jsonutil.IndentBytes(b, "", "  ")
+			logutil.FatalErr(err, "statuscode_lt_300")
+		}
+		if 1 == 1 {
+			err := os.WriteFile("output.json", b, 0600)
+			logutil.FatalErr(err)
+		}
+
+		res, err := auditlog.ParseAnalyticsAuditLogArchivalAPIResponse(bytes.NewReader(b))
+		logutil.FatalErr(err)
+		fmtutil.PrintJSON(res)
+
+		times := res.Results.EventTimes()
+		fmtutil.PrintJSON(times)
+
+		fmtutil.PrintJSON(times.Deltas())
+
+		if times.IsSorted(true) {
+			fmt.Printf("ORDERED ASC\n\n")
+		}
+		if times.IsSorted(false) {
+			fmt.Printf("ORDERED DESC\n\n")
+		}
+	}
 
 	fmt.Println("DONE")
 }
-
-/*
-
-func MS3ToMSS(m map[string][]string) map[string]string {
-	mss := map[string]string{}
-	for k, vs := range m {
-		for _, v := range vs {
-			mss[k] = v
-		}
-	}
-	return mss
-}
-
-func MS3ToMSA(m map[string][]string) map[string]any {
-	mss := map[string]any{}
-	for k, vs := range m {
-		for _, v := range vs {
-			mss[k] = v
-		}
-	}
-	return mss
-}
-
-*/
