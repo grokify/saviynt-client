@@ -6,7 +6,7 @@ toolchain go1.22.3
 
 require (
 	github.com/grokify/goauth v0.21.10
-	github.com/grokify/gocharts/v2 v2.19.8
+	github.com/grokify/gocharts/v2 v2.20.1
 	github.com/grokify/mogo v0.64.11
 	golang.org/x/oauth2 v0.23.0
 )
