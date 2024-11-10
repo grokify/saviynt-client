@@ -115,9 +115,9 @@ type ExternalAttrNamesOpts struct {
 	RequireValue bool
 }
 
-func (e ExternalAttrs) Names(opts ExternalAttrNamesOpts) []string {
+func (eas ExternalAttrs) Names(opts ExternalAttrNamesOpts) []string {
 	var names []string
-	for _, ea := range e {
+	for _, ea := range eas {
 		name := ea.AttributeName
 		name = strings.TrimSpace(name)
 		if opts.ToUpper {
@@ -160,9 +160,11 @@ func (c Connection) WriteExternalAttributeJSONFiles(dir string, templateNameAsDi
 		if err != nil {
 			return err
 		}
-		if writeHTTPParamsFile {
+		/*
+			if writeHTTPParamsFile {
 
-		}
+			}
+		*/
 	}
 	return nil
 }
