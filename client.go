@@ -23,6 +23,7 @@ const (
 	RelURLECM                      = "/ECM"
 	RelURLAPI                      = "/api/v5"
 	RelURLLoginRuntimeControlsData = "/fetchRuntimeControlsDataV2" // API at https://documenter.getpostman.com/view/23973797/2s9XxwutWR#b821cc21-ee7c-49e3-9433-989ed87b2b03
+	RelURLUpdateUser               = "/updateUser"
 )
 
 type Client struct {
@@ -31,12 +32,16 @@ type Client struct {
 	HTTPClient   *http.Client
 	SimpleClient *httpsimple.Client
 	Token        *oauth2.Token
+	PasswordAPI  *PasswordService
 }
 
-func NewClient(ctx context.Context, baseURL, path, username, password string) (Client, error) {
-	c := Client{
+func NewClient(ctx context.Context, baseURL, path, username, password string) (*Client, error) {
+	c := &Client{
 		BaseURL: baseURL,
 		Path:    path,
+	}
+	if strings.TrimSpace(path) == "" {
+		c.Path = RelURLAPI
 	}
 	tok, err := GetTokenPassword(ctx, baseURL, username, password, false)
 	if err != nil {
@@ -47,7 +52,12 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (C
 	c.HTTPClient = httpClient
 	simClient := httpsimple.NewClient(httpClient, baseURL)
 	c.SimpleClient = &simClient
+	c.PasswordAPI = NewPasswordService(c)
 	return c, nil
+}
+
+func (c *Client) BuildURL(endpointRelPath string) string {
+	return urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, endpointRelPath)
 }
 
 type LoginRequest struct {
@@ -55,7 +65,7 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (c Client) GetTokenPassword(ctx context.Context, username, password string) (*oauth2.Token, error) {
+func (c *Client) GetTokenPassword(ctx context.Context, username, password string) (*oauth2.Token, error) {
 	return GetTokenPassword(ctx, c.BaseURL, username, password, true)
 }
 
@@ -96,7 +106,7 @@ func GetTokenPassword(ctx context.Context, baseURL, username, password string, u
 	}
 }
 
-func (c Client) GetTokenRefresh(ctx context.Context) (*oauth2.Token, error) {
+func (c *Client) GetTokenRefresh(ctx context.Context) (*oauth2.Token, error) {
 	if c.Token == nil {
 		return nil, errors.New("oauth2.Token cannot be nil")
 	} else if strings.TrimSpace(c.Token.AccessToken) == "" {
