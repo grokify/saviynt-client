@@ -1,12 +1,12 @@
 module github.com/grokify/go-saviynt
 
-go 1.22.6
+go 1.22.7
 
-toolchain go1.23.0
+toolchain go1.23.2
 
 require (
-	github.com/grokify/goauth v0.22.2
-	github.com/grokify/gocharts/v2 v2.20.4
+	github.com/grokify/goauth v0.22.3
+	github.com/grokify/gocharts/v2 v2.20.5
 	github.com/grokify/mogo v0.65.3
 	golang.org/x/oauth2 v0.24.0
 )
