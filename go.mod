@@ -8,7 +8,7 @@ require (
 	github.com/grokify/goauth v0.22.2
 	github.com/grokify/gocharts/v2 v2.20.4
 	github.com/grokify/mogo v0.65.2
-	golang.org/x/oauth2 v0.23.0
+	golang.org/x/oauth2 v0.24.0
 )
 
 require (
