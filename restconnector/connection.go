@@ -150,11 +150,13 @@ func (c Connection) WriteExternalAttributeJSONFiles(dir string, templateNameAsDi
 		if outfileBase == "" {
 			return errors.New("no attribute name")
 		}
-		tmplName := strings.TrimSpace(c.TemplateName)
 		outfileExtAttrJSON := outfileBase
-		if templateNameAsFilePrefix {
-			outfileBase = strings.Join([]string{tmplName, outfileBase}, ".")
-		}
+		/*
+			tmplName := strings.TrimSpace(c.TemplateName)
+			if templateNameAsFilePrefix {
+				outfileBase = strings.Join([]string{tmplName, outfileBase}, ".")
+			}
+		*/
 		err := jsonutil.WriteFileIndentBytes(outfileExtAttrJSON+".json", []byte(ea.EncryptedAttributeValue), "", "  ", 0600)
 		//err = os.WriteFile(outfileExtAttrJSON, out, 0600)
 		if err != nil {
