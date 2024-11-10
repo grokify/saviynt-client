@@ -30,7 +30,9 @@ func main() {
 		os.Getenv(saviynt.EnvSaviyntPassword))
 	logutil.FatalErr(err, "new_client")
 
-	if 1 == 1 {
+	flagGetUser := true
+
+	if flagGetUser {
 		usr, _, resp, err := clt.GetUserByUsername(os.Getenv(saviynt.EnvSaviyntUsername))
 		logutil.FatalErr(err, "GetUserByUsername")
 
@@ -79,7 +81,8 @@ func main() {
 			b, err = jsonutil.IndentBytes(b, "", "  ")
 			logutil.FatalErr(err, "statuscode_lt_300")
 		}
-		if 1 == 1 {
+		flagWriteJSON := true
+		if flagWriteJSON {
 			err := os.WriteFile("output.json", b, 0600)
 			logutil.FatalErr(err)
 		}
