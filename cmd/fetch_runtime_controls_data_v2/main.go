@@ -37,10 +37,10 @@ func main() {
 		b, err := io.ReadAll(resp.Body)
 		logutil.FatalErr(err, "ReadAll")
 		fmt.Println(string(b))
-		fmtutil.PrintJSON(usr)
+		fmtutil.MustPrintJSON(usr)
 		scimUser, err := usr.UserDetails.SCIMUser()
 		logutil.FatalErr(err)
-		fmtutil.PrintJSON(scimUser)
+		fmtutil.MustPrintJSON(scimUser)
 		//panic("Z")
 	}
 
@@ -59,7 +59,7 @@ func main() {
 		"", "",
 		attrs,
 		9999, 0)
-	fmtutil.PrintJSON(req)
+	fmtutil.MustPrintJSON(req)
 	logutil.FatalErr(err, "fetchruntimecontrolsdatav2")
 	fmt.Printf("status code (%d)\n", resp.StatusCode)
 	if resp.StatusCode > 299 {
@@ -69,7 +69,7 @@ func main() {
 	if 1 == 0 {
 		r, err := siem.ParseSIEMAuditResponse(resp.Body)
 		logutil.FatalErr(err, "ParseSIEMAuditResponse")
-		fmtutil.PrintJSON(r)
+		fmtutil.MustPrintJSON(r)
 		fmt.Printf("REC_COUNT (%d)\n", len(r.Results))
 	} else {
 		b, err := io.ReadAll(resp.Body)
@@ -86,12 +86,12 @@ func main() {
 
 		res, err := auditlog.ParseAnalyticsAuditLogArchivalAPIResponse(bytes.NewReader(b))
 		logutil.FatalErr(err)
-		fmtutil.PrintJSON(res)
+		fmtutil.MustPrintJSON(res)
 
 		times := res.Results.EventTimes()
-		fmtutil.PrintJSON(times)
+		fmtutil.MustPrintJSON(times)
 
-		fmtutil.PrintJSON(times.Deltas())
+		fmtutil.MustPrintJSON(times.Deltas())
 
 		if times.IsSorted(true) {
 			fmt.Printf("ORDERED ASC\n\n")

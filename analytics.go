@@ -1,8 +1,8 @@
 package saviynt
 
 import (
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/grokify/mogo/net/http/httpsimple"
 	"github.com/grokify/mogo/net/urlutil"
@@ -31,8 +31,8 @@ func (c Client) FetchRuntimeControlsDataV2(analyticsName, requestor, analyticsID
 			Requestor:     requestor,
 			AnalyticsID:   analyticsID,
 			Attributes:    attrs,
-			Max:           strconv.Itoa(int(limit)),
-			Offset:        strconv.Itoa(int(offset)),
+			Max:           fmt.Sprintf("%d", limit),
+			Offset:        fmt.Sprintf("%d", offset),
 		},
 	}
 	sclient := httpsimple.Client{
