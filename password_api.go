@@ -10,10 +10,6 @@ import (
 	"github.com/grokify/mogo/type/stringsutil"
 )
 
-const (
-	APIPathChangePasswrd = "/changePassword"
-)
-
 type PasswordService struct {
 	client *Client
 }
@@ -22,11 +18,11 @@ func NewPasswordService(client *Client) *PasswordService {
 	return &PasswordService{client: client}
 }
 
-func (p *PasswordService) ChangePassword(opts ChangePasswordOpts) (*http.Response, error) {
-	return p.client.SimpleClient.Do(
+func (svc *PasswordService) ChangePassword(opts ChangePasswordOpts) (*http.Response, error) {
+	return svc.client.SimpleClient.Do(
 		httpsimple.Request{
 			Method:   http.MethodPost,
-			URL:      p.client.BuildURL(APIPathChangePasswrd),
+			URL:      svc.client.BuildURL(RelURLPasswordChange),
 			Body:     opts.Values(),
 			BodyType: httpsimple.BodyTypeForm,
 		},
