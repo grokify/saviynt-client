@@ -33,7 +33,7 @@ func main() {
 	flagGetUser := true
 
 	if flagGetUser {
-		usr, _, resp, err := clt.GetUserByUsername(os.Getenv(saviynt.EnvSaviyntUsername))
+		usr, _, resp, err := clt.UsersAPI.GetUserByUsername(os.Getenv(saviynt.EnvSaviyntUsername))
 		logutil.FatalErr(err, "GetUserByUsername")
 
 		b, err := io.ReadAll(resp.Body)

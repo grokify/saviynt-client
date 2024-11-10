@@ -23,7 +23,10 @@ const (
 	RelURLECM                      = "/ECM"
 	RelURLAPI                      = "/api/v5"
 	RelURLLoginRuntimeControlsData = "/fetchRuntimeControlsDataV2" // API at https://documenter.getpostman.com/view/23973797/2s9XxwutWR#b821cc21-ee7c-49e3-9433-989ed87b2b03
-	RelURLUpdateUser               = "/updateUser"
+
+	RelURLPasswordChange = "/changePassword"
+	RelURLUserGet        = "/getUser"
+	RelURLUserUpdate     = "/updateUser"
 )
 
 type Client struct {
@@ -33,6 +36,7 @@ type Client struct {
 	SimpleClient *httpsimple.Client
 	Token        *oauth2.Token
 	PasswordAPI  *PasswordService
+	UsersAPI     *UsersService
 }
 
 func NewClient(ctx context.Context, baseURL, path, username, password string) (*Client, error) {
@@ -53,6 +57,7 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (*
 	simClient := httpsimple.NewClient(httpClient, baseURL)
 	c.SimpleClient = &simClient
 	c.PasswordAPI = NewPasswordService(c)
+	c.UsersAPI = NewUsersService(c)
 	return c, nil
 }
 
