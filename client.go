@@ -28,6 +28,7 @@ type Client struct {
 	HTTPClient   *http.Client
 	SimpleClient *httpsimple.Client
 	Token        *oauth2.Token
+	AnalyticsAPI *AnalyticsService
 	PasswordAPI  *PasswordService
 	UsersAPI     *UsersService
 }
@@ -49,6 +50,7 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (*
 	c.HTTPClient = httpClient
 	simClient := httpsimple.NewClient(httpClient, baseURL)
 	c.SimpleClient = &simClient
+	c.AnalyticsAPI = NewAnalyticsService(c)
 	c.PasswordAPI = NewPasswordService(c)
 	c.UsersAPI = NewUsersService(c)
 	return c, nil

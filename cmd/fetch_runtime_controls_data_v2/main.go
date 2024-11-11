@@ -56,7 +56,7 @@ func main() {
 	}
 
 	// DATE_FORMAT(ua.ACCESSTIME,  '%Y-%m-%dT%TZ')
-	req, resp, err := clt.FetchRuntimeControlsDataV2(
+	req, resp, err := clt.AnalyticsAPI.FetchRuntimeControlsDataV2(
 		os.Getenv("SAVIYNT_QUERY_NAME"),
 		"", "",
 		attrs,

@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/grokify/mogo/net/http/httpsimple"
-	"github.com/grokify/mogo/net/urlutil"
 )
 
 const (
@@ -13,18 +12,32 @@ const (
 	AnalyticsLimitMax     = 500
 )
 
+type AnalyticsService struct {
+	client *Client
+}
+
+func NewAnalyticsService(client *Client) *AnalyticsService {
+	return &AnalyticsService{client: client}
+}
+
 // FetchRuntimeControlsDataV2 returns data from the `fetchRuntimeControlsDataV2` API endpoint.
 // `analyticsName` is required. `requestor`, and `analyticsID` are optional.
-func (c Client) FetchRuntimeControlsDataV2(analyticsName, requestor, analyticsID string, attrs map[string]any, limit, offset uint) (*httpsimple.Request, *http.Response, error) {
+func (svc *AnalyticsService) FetchRuntimeControlsDataV2(analyticsName, requestor, analyticsID string, attrs map[string]any, limit, offset uint) (*httpsimple.Request, *http.Response, error) {
 	// func (c Client) GetAuditLogRuntimeControlsData(name string, minutes, limit, offset uint) (*http.Response, error) {
+	if svc.client == nil {
+		return nil, nil, ErrClientNotSet
+	} else if svc.client.SimpleClient == nil {
+		return nil, nil, ErrSimpleClientNotSet
+	}
 	if limit == 0 {
 		limit = AnalyticsLimitDefault
 	}
 	// attrs = map[string]any{"timeFrame": "3000"}
-	apiURL := urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, RelURLLoginRuntimeControlsData)
+	// apiURL := urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, RelURLLoginRuntimeControlsData)
 	sreq := httpsimple.Request{
-		Method:   http.MethodPost,
-		URL:      apiURL,
+		Method: http.MethodPost,
+		// URL:      apiURL,
+		URL:      svc.client.BuildURL(RelURLLoginRuntimeControlsData),
 		BodyType: httpsimple.BodyTypeJSON,
 		Body: AnalyticsRequest{
 			AnalyticsName: analyticsName,
@@ -35,10 +48,8 @@ func (c Client) FetchRuntimeControlsDataV2(analyticsName, requestor, analyticsID
 			Offset:        fmt.Sprintf("%d", offset),
 		},
 	}
-	sclient := httpsimple.Client{
-		BaseURL:    c.BaseURL,
-		HTTPClient: c.HTTPClient}
-	resp, err := sclient.Do(sreq)
+
+	resp, err := svc.client.SimpleClient.Do(sreq)
 	return &sreq, resp, err
 }
 
