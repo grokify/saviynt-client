@@ -15,6 +15,10 @@ func NewUsersService(client *Client) *UsersService {
 	return &UsersService{client: client}
 }
 
+func (svc *UsersService) GetUserAccessDetails() {
+
+}
+
 func (svc *UsersService) UpdateUsers(matchField, matchValue string, attrs map[string]any) (*httpsimple.Request, *http.Response, error) {
 	if attrs == nil {
 		attrs = map[string]any{}
