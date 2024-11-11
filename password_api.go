@@ -19,6 +19,9 @@ func NewPasswordService(client *Client) *PasswordService {
 }
 
 func (svc *PasswordService) ChangePassword(opts ChangePasswordOpts) (*http.Response, error) {
+	if svc.client == nil {
+		return nil, ErrClientNotSet
+	}
 	return svc.client.SimpleClient.Do(
 		httpsimple.Request{
 			Method:   http.MethodPost,

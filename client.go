@@ -17,6 +17,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var (
+	ErrClientNotSet       = errors.New("saviynt.Client must be set")
+	ErrSimpleClientNotSet = errors.New("simple client must be set")
+)
+
 type Client struct {
 	BaseURL      string
 	Path         string

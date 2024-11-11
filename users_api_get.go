@@ -2,7 +2,6 @@ package saviynt
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -57,8 +56,10 @@ func (ud *UserDetails) SCIMUser() (scim.User, error) {
 }
 
 func (svc *UsersService) GetUserByUsername(username string) (*GetUserResponse, []byte, *http.Response, error) {
-	if svc.client.SimpleClient == nil {
-		return nil, []byte{}, nil, errors.New("simple client cannot be nil")
+	if svc.client == nil {
+		return nil, []byte{}, nil, ErrClientNotSet
+	} else if svc.client.SimpleClient == nil {
+		return nil, []byte{}, nil, ErrSimpleClientNotSet
 	}
 	sreq := httpsimple.Request{
 		Method:   http.MethodPost,
