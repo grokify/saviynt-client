@@ -61,8 +61,7 @@ func (svc *UsersService) GetUserByUsername(username string) (*GetUserResponse, [
 		return nil, []byte{}, nil, errors.New("simple client cannot be nil")
 	}
 	sreq := httpsimple.Request{
-		Method: http.MethodPost,
-		// URL:      urlutil.JoinAbsolute(c.BaseURL, RelURLECM, RelURLAPI, "getUser"),
+		Method:   http.MethodPost,
 		URL:      svc.client.BuildURL(RelURLUserGet),
 		BodyType: httpsimple.BodyTypeJSON,
 		Body: map[string]string{
