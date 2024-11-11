@@ -42,11 +42,11 @@ type ChangePasswordOpts struct {
 	// ChangePasswordAssociatedAccounts specifies whether to create the corresponding Change Password task, if `true`. You can specify `false` to only update the user password. The default value is `true`.
 	ChangePasswordAssociatedAccounts bool `json:"changePasswordAssociatedAccounts"`
 
-	// Endpointspecifies a list of endpoints (comma-separated) to update the password for
+	// Endpoint specifies a list of endpoints (comma-separated) to update the password for
 	// if `ChangePasswordAssociatedAccounts` is set to `true`.
 	Endpoint []string `json:"endpoint"`
 
-	// SetARSTaskSourcespecifies whether to set the source column in the `arstasks`
+	// SetARSTaskSource specifies whether to set the source column in the `arstasks`
 	// table with the `changeOwnPasswordFromAPI` value. When the source column in `arstasks`
 	// table is set to the `changeOwnPasswordFromAPI` value then the `pwdLastSet` parameter is
 	// not set to `0`` for Active Directory (AD). The default value is `false`.  Note: If your
