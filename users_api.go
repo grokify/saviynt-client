@@ -20,9 +20,15 @@ func (svc *UsersService) GetUserAccessDetails() {
 }
 
 func (svc *UsersService) UpdateUsers(matchField, matchValue string, attrs map[string]any) (*httpsimple.Request, *http.Response, error) {
+	if svc.client == nil {
+		return nil, nil, ErrClientNotSet
+	} else if svc.client.SimpleClient == nil {
+		return nil, nil, ErrSimpleClientNotSet
+	}
 	if attrs == nil {
 		attrs = map[string]any{}
 	}
+
 	matchField = strings.TrimSpace(matchField)
 	if matchField == "username" {
 		attrs[matchField] = matchValue
