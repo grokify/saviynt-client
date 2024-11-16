@@ -79,8 +79,7 @@ func (opts ChangePasswordOpts) Values() url.Values {
 	} else {
 		v.Add("validateagainstpolicy", "N")
 	}
-	eps := stringsutil.SliceCondenseSpace(opts.Endpoint, true, false)
-	if len(eps) > 0 {
+	if eps := stringsutil.SliceCondenseSpace(opts.Endpoint, true, false); len(eps) > 0 {
 		v.Add("endpoints", strings.Join(eps, ","))
 	}
 	return v

@@ -29,9 +29,7 @@ func (opts ConnectionSaveTestOpts) Values() url.Values {
 	return v
 }
 
-func (c Client) ConnectionSaveTest() {
-
-}
+func (c Client) ConnectionSaveTest() {}
 
 type ConnectionParamsRESTOpts struct {
 	ConnectionJSON string
