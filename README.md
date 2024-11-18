@@ -5,7 +5,9 @@
 [![Docs][docs-godoc-svg]][docs-godoc-url]
 [![License][license-svg]][license-url]
 
-This is a Go helper for the Saviynt API.
+This is a Go helper for the [Saviynt API](https://saviynt.com/api-reference).
+
+There is some example code in the [`cmd`](`cmd`) folder.
 
  [build-status-svg]: https://github.com/grokify/go-saviynt/workflows/test/badge.svg
  [build-status-url]: https://github.com/grokify/go-saviynt/actions
