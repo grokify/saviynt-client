@@ -5,14 +5,14 @@ go 1.22.7
 toolchain go1.23.2
 
 require (
-	github.com/grokify/goauth v0.22.3
-	github.com/grokify/gocharts/v2 v2.20.5
-	github.com/grokify/mogo v0.65.3
+	github.com/grokify/goauth v0.22.4
+	github.com/grokify/gocharts/v2 v2.20.6
+	github.com/grokify/mogo v0.65.5
 	golang.org/x/oauth2 v0.24.0
 )
 
 require (
-	github.com/caarlos0/env/v6 v6.10.1 // indirect
+	github.com/caarlos0/env/v11 v11.2.2 // indirect
 	github.com/grokify/base36 v1.0.5 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/jessevdk/go-flags v1.6.1 // indirect
