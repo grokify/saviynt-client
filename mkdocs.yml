@@ -1,0 +1,10 @@
+site_name: Go Saviynt
+site_url: https://grokify.github.io/go-saviynt/
+docs_dir: docs_src
+theme: readthedocs
+markdown_extension:
+    - attr_list
+nav:
+    - 'Home': 'index.md'
+    - 'API Discussions':
+        - 'Job Control': 'discussions_jobcontrol.md'
