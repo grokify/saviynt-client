@@ -31,7 +31,7 @@ func (cm ConnectionFile) WriteExternalAttributeJSONFiles(dir string, templateNam
 
 func ReadConnectionFile(filename string) (*ConnectionFile, error) {
 	connMap := &ConnectionFile{}
-	_, err := jsonutil.UnmarshalFile(filename, connMap)
+	err := jsonutil.UnmarshalFile(filename, connMap)
 	return connMap, err
 }
 
@@ -157,7 +157,7 @@ func (c Connection) WriteExternalAttributeJSONFiles(dir string, templateNameAsDi
 				outfileBase = strings.Join([]string{tmplName, outfileBase}, ".")
 			}
 		*/
-		err := jsonutil.WriteFileIndentBytes(outfileExtAttrJSON+".json", []byte(ea.EncryptedAttributeValue), "", "  ", 0600)
+		err := jsonutil.MarshalFileIndentBytes(outfileExtAttrJSON+".json", []byte(ea.EncryptedAttributeValue), "", "  ", 0600)
 		//err = os.WriteFile(outfileExtAttrJSON, out, 0600)
 		if err != nil {
 			return err
