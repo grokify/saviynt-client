@@ -30,6 +30,7 @@ type Client struct {
 	Token        *oauth2.Token
 	AnalyticsAPI *AnalyticsService
 	PasswordAPI  *PasswordService
+	TransportAPI *TransportService
 	UsersAPI     *UsersService
 }
 
@@ -52,6 +53,7 @@ func NewClient(ctx context.Context, baseURL, path, username, password string) (*
 	c.SimpleClient = &simClient
 	c.AnalyticsAPI = NewAnalyticsService(c)
 	c.PasswordAPI = NewPasswordService(c)
+	c.TransportAPI = NewTransportService(c)
 	c.UsersAPI = NewUsersService(c)
 	return c, nil
 }

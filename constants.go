@@ -9,6 +9,8 @@ const (
 	RelURLLoginRuntimeControlsData = "/fetchRuntimeControlsDataV2" // API at https://documenter.getpostman.com/view/23973797/2s9XxwutWR#b821cc21-ee7c-49e3-9433-989ed87b2b03
 	RelURLUserGetAccessDetails     = "/getAccessDetailsForUser"
 	RelURLPasswordChange           = "/changePassword"
+	RelURLTransportExport          = "/exportTransportPackage"
+	RelURLTransportImport          = "/importTransportPackage"
 	RelURLUserGet                  = "/getUser"
 	RelURLUserUpdate               = "/updateUser"
 
