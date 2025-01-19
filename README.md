@@ -27,3 +27,13 @@ https://docs.saviyntcloud.com/bundle/EIC-Admin-v24x/page/Content/Chapter20-EIC-I
 ## OCSF
 
 https://www.query.ai/resources/blogs/need-to-model-cybersecurity-data-lets-walk-through-ocsf/
+
+## Build Docs
+
+### Run Locally
+
+`% mkdocs serve`
+
+### Build Docs
+
+`% mkdocs build -d docs`
