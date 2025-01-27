@@ -5,7 +5,7 @@ go 1.23.2
 require (
 	github.com/grokify/goauth v0.23.2
 	github.com/grokify/gocharts/v2 v2.21.12
-	github.com/grokify/mogo v0.67.6
+	github.com/grokify/mogo v0.67.7
 	golang.org/x/oauth2 v0.25.0
 )
 
