@@ -1,9 +1,9 @@
 module github.com/grokify/go-saviynt
 
-go 1.23.2
+go 1.23.6
 
 require (
-	github.com/grokify/goauth v0.23.3
+	github.com/grokify/goauth v0.23.5
 	github.com/grokify/gocharts/v2 v2.22.0
 	github.com/grokify/mogo v0.67.9
 	golang.org/x/oauth2 v0.26.0
@@ -24,7 +24,6 @@ require (
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.4 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/quicktemplate v1.8.0 // indirect
 	github.com/xuri/efp v0.0.0-20241211021726-c4e992084aa6 // indirect
@@ -38,5 +37,3 @@ require (
 	golang.org/x/text v0.22.0 // indirect
 	gonum.org/v1/gonum v0.15.1 // indirect
 )
-
-// replace github.com/grokify/mogo => ../mogo
