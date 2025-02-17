@@ -5,7 +5,7 @@ go 1.23.6
 require (
 	github.com/grokify/goauth v0.23.5
 	github.com/grokify/gocharts/v2 v2.22.0
-	github.com/grokify/mogo v0.67.9
+	github.com/grokify/mogo v0.68.0
 	golang.org/x/oauth2 v0.26.0
 )
 
@@ -30,9 +30,9 @@ require (
 	github.com/xuri/excelize/v2 v2.9.0 // indirect
 	github.com/xuri/nfp v0.0.0-20250111060730-82a408b9aa71 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/exp v0.0.0-20250207012021-f9890c6ad9f3 // indirect
+	golang.org/x/exp v0.0.0-20250215185904-eff6e970281f // indirect
 	golang.org/x/image v0.24.0 // indirect
-	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	gonum.org/v1/gonum v0.15.1 // indirect
